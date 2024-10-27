@@ -1,6 +1,46 @@
 sudo systemctl start jenkins
 sudo systemctl status jenkins
 
+pipeline {
+    agent any
+    stages {
+        stage('Code') {
+            steps {
+                echo 'This is a build phase'
+            }
+        }
+        stage('Build') {
+            steps {
+                input('Do you want to continue?')
+            }
+        }
+        stage('Integrate') {
+            when {
+                not {
+                    branch 'master'
+                }
+            }
+            steps {
+                echo 'Integration is done!!!'
+            }
+        }
+        stage('Test') {
+            parallel {
+                stage('Unit Test') {
+                    steps {
+                        echo 'Unit test done'
+                    }
+                }
+                stage('Integration Test') {
+                    steps {
+                        echo 'Running Integration Test'
+                    }
+                }
+            }
+        }
+    }
+}
+
 provider "aws" {
 
 region = "us-west-2"
