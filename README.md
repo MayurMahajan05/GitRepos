@@ -41,6 +41,11 @@ pipeline {
     }
 }
 
+
+FROM nginx
+COPY index.html/usr/share/nginx/html 
+
+
 provider "aws" {
 
 region = "us-west-2"
